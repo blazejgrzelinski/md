@@ -32,6 +32,7 @@ struct LoginView: View {
                     .autocapitalization(.none)
                     .disabled(isLoading)
                 
+                
                 SecureField("Password", text: $password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disabled(isLoading)

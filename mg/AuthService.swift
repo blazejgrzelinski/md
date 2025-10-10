@@ -82,62 +82,47 @@ class AuthService {
         }
         
         // Store tokens and user data
-        saveUserSession(loginResponse)
+        await saveUserSession(loginResponse)
         
         return loginResponse
     }
     
     // MARK: - Logout
+    @MainActor
     func logout() {
-        UserDefaults.standard.removeObject(forKey: "accessToken")
-        UserDefaults.standard.removeObject(forKey: "refreshToken")
-        UserDefaults.standard.removeObject(forKey: "userId")
-        UserDefaults.standard.removeObject(forKey: "userEmail")
-        UserDefaults.standard.removeObject(forKey: "userName")
-        UserDefaults.standard.removeObject(forKey: "userAvatar")
-        
+        DataManager.shared.deleteUserSession()
         print("👋 User logged out")
     }
     
     // MARK: - Session Management
+    @MainActor
     func isLoggedIn() -> Bool {
-        return UserDefaults.standard.string(forKey: "accessToken") != nil
+        return DataManager.shared.isUserSessionExists()
     }
     
+    @MainActor
     func getAccessToken() -> String? {
-        return UserDefaults.standard.string(forKey: "accessToken")
+        return DataManager.shared.getAccessToken()
     }
     
+    @MainActor
     func getRefreshToken() -> String? {
-        return UserDefaults.standard.string(forKey: "refreshToken")
+        return DataManager.shared.getRefreshToken()
     }
     
-    func getCurrentUser() -> (id: String?, email: String?, name: String?, avatar: String?)? {
-        guard isLoggedIn() else { return nil }
-        
-        return (
-            id: UserDefaults.standard.string(forKey: "userId"),
-            email: UserDefaults.standard.string(forKey: "userEmail"),
-            name: UserDefaults.standard.string(forKey: "userName"),
-            avatar: UserDefaults.standard.string(forKey: "userAvatar")
-        )
+    @MainActor
+    func getCurrentUser() -> User? {
+        return DataManager.shared.getCurrentUser()
     }
     
     // MARK: - Private Helpers
+    @MainActor
     private func saveUserSession(_ response: LoginResponse) {
-        UserDefaults.standard.set(response.accessToken, forKey: "accessToken")
-        UserDefaults.standard.set(response.refreshToken, forKey: "refreshToken")
-        UserDefaults.standard.set(response.user.id, forKey: "userId")
-        UserDefaults.standard.set(response.user.email, forKey: "userEmail")
-        UserDefaults.standard.set(response.user.name, forKey: "userName")
-        
-        if let avatar = response.user.avatar {
-            UserDefaults.standard.set(avatar, forKey: "userAvatar")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "userAvatar")
-        }
-        
-        print("💾 User session saved")
+        DataManager.shared.saveUserSession(
+            user: response.user,
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken
+        )
     }
 }
 

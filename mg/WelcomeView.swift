@@ -19,8 +19,10 @@ struct WelcomeView: View {
             HStack {
                 Spacer()
                 Button("Logout") {
-                    AuthService.shared.logout()
-                    isLoggedIn = false
+                    Task { @MainActor in
+                        AuthService.shared.logout()
+                        isLoggedIn = false
+                    }
                 }
                 .foregroundColor(.red)
                 .padding()
@@ -105,15 +107,22 @@ struct WelcomeView: View {
         }
         .padding()
         .navigationBarHidden(true)
-        .onAppear {
-            loadUserData()
+        .task {
+            await loadUserData()
         }
     }
     
-    private func loadUserData() {
-        userName = UserDefaults.standard.string(forKey: "userName") ?? "User"
-        userEmail = UserDefaults.standard.string(forKey: "userEmail") ?? "user@example.com"
-        userAvatar = UserDefaults.standard.string(forKey: "userAvatar") ?? ""
+    @MainActor
+    private func loadUserData() async {
+        if let user = AuthService.shared.getCurrentUser() {
+            userName = user.name
+            userEmail = user.email
+            userAvatar = user.avatar ?? ""
+        } else {
+            userName = "User"
+            userEmail = "user@example.com"
+            userAvatar = ""
+        }
     }
     
     private func getCurrentTime() -> String {
