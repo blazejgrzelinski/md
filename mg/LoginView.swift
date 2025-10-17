@@ -64,12 +64,8 @@ struct LoginView: View {
                 .padding(.top, 10)
         }
         .padding()
-        .alert("login_successful".localized, isPresented: $showAlert) {
-            Button("ok".localized) {
-                if alertMessage.contains("Welcome back") {
-                    isLoggedIn = true
-                }
-            }
+        .alert("login_failed".localized, isPresented: $showAlert) {
+            Button("ok".localized) { }
         } message: {
             Text(alertMessage)
         }
@@ -90,8 +86,8 @@ struct LoginView: View {
                 
                 await MainActor.run {
                     isLoading = false
-                    alertMessage = "welcome_user".localized(with: response.user.name)
-                    showAlert = true
+                    // Automatically redirect to home page without showing popup
+                    isLoggedIn = true
                 }
             } catch {
                 await MainActor.run {
