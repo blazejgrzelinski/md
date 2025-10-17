@@ -1,0 +1,78 @@
+/* 
+  Localizable.strings
+  mg
+  
+  Created by Blazej Grzelinski on 09/10/2025.
+*/
+
+// MARK: - Common
+"ok" = "OK";
+"cancel" = "Cancel";
+"add" = "Add";
+"save" = "Save";
+"delete" = "Delete";
+"edit" = "Edit";
+"done" = "Done";
+"search" = "Search";
+"loading" = "Loading...";
+
+// MARK: - Login
+"welcome_back" = "Welcome Back";
+"email" = "Email";
+"password" = "Password";
+"login" = "Login";
+"login_successful" = "Login successful";
+"login_failed" = "Login failed";
+"invalid_credentials" = "Invalid credentials";
+"please_enter_email_password" = "Please enter both email and password";
+"demo_credentials" = "Demo: %@ / %@";
+
+// MARK: - Welcome
+"welcome_user" = "Welcome, %@!";
+"successfully_logged_in" = "You have successfully logged in to your account.";
+"account" = "Account";
+"login_time" = "Login Time";
+"add_activity" = "Add Activity";
+"view_map" = "View Map";
+"thank_you_using_app" = "Thank you for using our app!";
+"logout" = "Logout";
+
+// MARK: - Add Activity
+"add_new_activity" = "Add New Activity";
+"choose_activity_add_details" = "Choose an activity and add details";
+"activity_name_optional" = "Activity Name (Optional)";
+"description_optional" = "Description (Optional)";
+"search_activities" = "Search activities...";
+"add_activity_button" = "Add Activity";
+"activity_added" = "Activity Added";
+"added_activity" = "Added: %@";
+
+// MARK: - Activities
+"running" = "Running";
+"cycling" = "Cycling";
+"hiking" = "Hiking";
+"swimming" = "Swimming";
+"gym" = "Gym";
+"yoga" = "Yoga";
+"tennis" = "Tennis";
+"basketball" = "Basketball";
+"football" = "Football";
+"volleyball" = "Volleyball";
+"boxing" = "Boxing";
+"dancing" = "Dancing";
+
+// MARK: - Map
+"map" = "Map";
+"view_map" = "View Map";
+
+// MARK: - Location
+"location_permission_title" = "Location Access Required";
+"location_permission_message" = "This app needs access to your location to provide location-based features and track your activities.";
+"allow_location_access" = "Allow Location Access";
+"open_settings" = "Open Settings";
+"location_settings_alert_title" = "Location Access Denied";
+"location_settings_alert_message" = "Please enable location access in Settings to use location features.";
+"location_unknown" = "Location Unknown";
+"current_location" = "Current Location";
+"location_enabled" = "Location Enabled";
+"location_disabled" = "Location Disabled";

@@ -21,19 +21,19 @@ struct LoginView: View {
                 .font(.system(size: 80))
                 .foregroundColor(.blue)
             
-            Text("Welcome Back")
+            Text("welcome_back".localized)
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
             VStack(spacing: 15) {
-                TextField("Email", text: $email)
+                TextField("email".localized, text: $email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .disabled(isLoading)
                 
                 
-                SecureField("Password", text: $password)
+                SecureField("password".localized, text: $password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disabled(isLoading)
             }
@@ -46,7 +46,7 @@ struct LoginView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                 } else {
-                    Text("Login")
+                    Text("login".localized)
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -58,14 +58,14 @@ struct LoginView: View {
             .padding(.horizontal, 40)
             .disabled(isLoading)
             
-            Text("Demo: \(Config.defaultEmail) / \(Config.defaultPassword)")
+            Text("demo_credentials".localized(with: Config.defaultEmail, Config.defaultPassword))
                 .font(.caption)
                 .foregroundColor(.gray)
                 .padding(.top, 10)
         }
         .padding()
-        .alert("Login Status", isPresented: $showAlert) {
-            Button("OK") {
+        .alert("login_successful".localized, isPresented: $showAlert) {
+            Button("ok".localized) {
                 if alertMessage.contains("Welcome back") {
                     isLoggedIn = true
                 }
@@ -77,7 +77,7 @@ struct LoginView: View {
     
     private func login() {
         guard !email.isEmpty && !password.isEmpty else {
-            alertMessage = "Please enter both email and password"
+            alertMessage = "please_enter_email_password".localized
             showAlert = true
             return
         }
@@ -90,13 +90,13 @@ struct LoginView: View {
                 
                 await MainActor.run {
                     isLoading = false
-                    alertMessage = "Welcome back, \(response.user.name)!"
+                    alertMessage = "welcome_user".localized(with: response.user.name)
                     showAlert = true
                 }
             } catch {
                 await MainActor.run {
                     isLoading = false
-                    alertMessage = "Login failed: \(error.localizedDescription)"
+                    alertMessage = "login_failed".localized + ": \(error.localizedDescription)"
                     showAlert = true
                 }
             }

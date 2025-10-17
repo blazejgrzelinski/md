@@ -10,27 +10,35 @@ import MapKit
 import CoreLocation
 
 struct MapView: View {
-    @StateObject private var locationManager = LocationManager()
+    @StateObject private var locationManager = LocationManager.shared
     @State private var position: MapCameraPosition = .automatic
+    @State private var showLocationPermission = false
+    @State private var currentAddress: String?
     
     var body: some View {
         VStack {
             // Header
             HStack {
-                Image(systemName: "location.circle.fill")
-                    .foregroundColor(.blue)
+                Image(systemName: locationManager.isLocationEnabled ? "location.circle.fill" : "location.slash.circle.fill")
+                    .foregroundColor(locationManager.isLocationEnabled ? .blue : .red)
                     .font(.title2)
                 
                 VStack(alignment: .leading) {
-                    Text("Current Location")
+                    Text("current_location".localized)
                         .font(.headline)
                     if let location = locationManager.location {
                         Text("Lat: \(location.coordinate.latitude, specifier: "%.4f")")
                             .font(.caption)
                         Text("Lng: \(location.coordinate.longitude, specifier: "%.4f")")
                             .font(.caption)
+                        if let address = currentAddress {
+                            Text(address)
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                        }
                     } else {
-                        Text("Getting location...")
+                        Text("location_unknown".localized)
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
@@ -38,14 +46,35 @@ struct MapView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    locationManager.requestLocation()
-                }) {
-                    Image(systemName: "location.fill")
-                        .foregroundColor(.white)
-                        .padding(8)
-                        .background(Color.blue)
-                        .clipShape(Circle())
+                VStack(spacing: 8) {
+                    // Center on location button
+                    Button(action: {
+                        centerOnUserLocation()
+                    }) {
+                        Image(systemName: "location.fill")
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                    }
+                    .disabled(!locationManager.isLocationEnabled)
+                    
+                    // Request permission button
+                    if locationManager.authorizationStatus == .notDetermined || locationManager.authorizationStatus == .denied {
+                        Button(action: {
+                            if locationManager.authorizationStatus == .denied {
+                                showLocationPermission = true
+                            } else {
+                                locationManager.requestLocationPermission()
+                            }
+                        }) {
+                            Image(systemName: "location.circle")
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Color.orange)
+                                .clipShape(Circle())
+                        }
+                    }
                 }
             }
             .padding()
@@ -54,7 +83,7 @@ struct MapView: View {
             // Map with modern iOS 17+ API
             Map(position: $position) {
                 if let location = locationManager.location {
-                    Marker("You are here", coordinate: location.coordinate)
+                    Marker("current_location".localized, coordinate: location.coordinate)
                         .tint(.blue)
                 }
                 UserAnnotation()
@@ -74,16 +103,25 @@ struct MapView: View {
                             pitch: 0
                         )
                     )
+                    
+                    // Get address for the new location
+                    locationManager.getAddressFromLocation { address in
+                        currentAddress = address
+                    }
                 }
             }
             .onAppear {
-                locationManager.requestLocation()
+                if locationManager.authorizationStatus == .authorizedWhenInUse || locationManager.authorizationStatus == .authorizedAlways {
+                    locationManager.startLocationUpdates()
+                } else {
+                    locationManager.requestLocationPermission()
+                }
             }
             
             // Status
             HStack {
                 if locationManager.authorizationStatus == .denied {
-                    Text("Location access denied. Please enable in Settings.")
+                    Text("location_settings_alert_message".localized)
                         .foregroundColor(.red)
                         .font(.caption)
                 } else if locationManager.authorizationStatus == .notDetermined {
@@ -105,48 +143,33 @@ struct MapView: View {
             .padding(.horizontal)
             .padding(.bottom)
         }
-        .navigationTitle("Map")
+        .navigationTitle("map".localized)
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    private let locationManager = CLLocationManager()
-    
-    @Published var location: CLLocation?
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    
-    override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        authorizationStatus = locationManager.authorizationStatus
-    }
-    
-    func requestLocation() {
-        switch authorizationStatus {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .authorizedWhenInUse, .authorizedAlways:
-            locationManager.requestLocation()
-        default:
-            break
+        .alert("location_settings_alert_title".localized, isPresented: $showLocationPermission) {
+            Button("cancel".localized) { }
+            Button("open_settings".localized) {
+                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsUrl)
+                }
+            }
+        } message: {
+            Text("location_settings_alert_message".localized)
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        self.location = location
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error.localizedDescription)")
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        authorizationStatus = status
-        if status == .authorizedWhenInUse || status == .authorizedAlways {
-            locationManager.requestLocation()
+    // MARK: - Helper Functions
+    private func centerOnUserLocation() {
+        guard let location = locationManager.location else { return }
+        
+        withAnimation(.easeInOut(duration: 1.0)) {
+            position = .camera(
+                MapCamera(
+                    centerCoordinate: location.coordinate,
+                    distance: 1000,
+                    heading: 0,
+                    pitch: 0
+                )
+            )
         }
     }
 }

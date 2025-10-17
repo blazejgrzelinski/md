@@ -1,0 +1,78 @@
+/* 
+  Localizable.strings (Spanish)
+  mg
+  
+  Created by Blazej Grzelinski on 09/10/2025.
+*/
+
+// MARK: - Common
+"ok" = "OK";
+"cancel" = "Cancelar";
+"add" = "Agregar";
+"save" = "Guardar";
+"delete" = "Eliminar";
+"edit" = "Editar";
+"done" = "Hecho";
+"search" = "Buscar";
+"loading" = "Cargando...";
+
+// MARK: - Login
+"welcome_back" = "Bienvenido de nuevo";
+"email" = "Correo electrónico";
+"password" = "Contraseña";
+"login" = "Iniciar sesión";
+"login_successful" = "Inicio de sesión exitoso";
+"login_failed" = "Error al iniciar sesión";
+"invalid_credentials" = "Credenciales inválidas";
+"please_enter_email_password" = "Por favor ingrese correo electrónico y contraseña";
+"demo_credentials" = "Demo: %@ / %@";
+
+// MARK: - Welcome
+"welcome_user" = "¡Bienvenido, %@!";
+"successfully_logged_in" = "Has iniciado sesión exitosamente en tu cuenta.";
+"account" = "Cuenta";
+"login_time" = "Hora de inicio de sesión";
+"add_activity" = "Agregar actividad";
+"view_map" = "Ver mapa";
+"thank_you_using_app" = "¡Gracias por usar nuestra aplicación!";
+"logout" = "Cerrar sesión";
+
+// MARK: - Add Activity
+"add_new_activity" = "Agregar nueva actividad";
+"choose_activity_add_details" = "Elige una actividad y agrega detalles";
+"activity_name_optional" = "Nombre de la actividad (opcional)";
+"description_optional" = "Descripción (opcional)";
+"search_activities" = "Buscar actividades...";
+"add_activity_button" = "Agregar actividad";
+"activity_added" = "Actividad agregada";
+"added_activity" = "Agregado: %@";
+
+// MARK: - Activities
+"running" = "Correr";
+"cycling" = "Ciclismo";
+"hiking" = "Senderismo";
+"swimming" = "Natación";
+"gym" = "Gimnasio";
+"yoga" = "Yoga";
+"tennis" = "Tenis";
+"basketball" = "Baloncesto";
+"football" = "Fútbol";
+"volleyball" = "Voleibol";
+"boxing" = "Boxeo";
+"dancing" = "Baile";
+
+// MARK: - Map
+"map" = "Mapa";
+"view_map" = "Ver mapa";
+
+// MARK: - Location
+"location_permission_title" = "Acceso a la ubicación requerido";
+"location_permission_message" = "Esta aplicación necesita acceso a tu ubicación para proporcionar funciones basadas en la ubicación y rastrear tus actividades.";
+"allow_location_access" = "Permitir acceso a la ubicación";
+"open_settings" = "Abrir configuración";
+"location_settings_alert_title" = "Acceso a la ubicación denegado";
+"location_settings_alert_message" = "Por favor habilita el acceso a la ubicación en Configuración para usar las funciones de ubicación.";
+"location_unknown" = "Ubicación desconocida";
+"current_location" = "Ubicación actual";
+"location_enabled" = "Ubicación habilitada";
+"location_disabled" = "Ubicación deshabilitada";

@@ -1,0 +1,78 @@
+/* 
+  Localizable.strings (Polish)
+  mg
+  
+  Created by Blazej Grzelinski on 09/10/2025.
+*/
+
+// MARK: - Common
+"ok" = "OK";
+"cancel" = "Anuluj";
+"add" = "Dodaj";
+"save" = "Zapisz";
+"delete" = "Usuń";
+"edit" = "Edytuj";
+"done" = "Gotowe";
+"search" = "Szukaj";
+"loading" = "Ładowanie...";
+
+// MARK: - Login
+"welcome_back" = "Witaj ponownie";
+"email" = "Email";
+"password" = "Hasło";
+"login" = "Zaloguj";
+"login_successful" = "Logowanie pomyślne";
+"login_failed" = "Logowanie nieudane";
+"invalid_credentials" = "Nieprawidłowe dane logowania";
+"please_enter_email_password" = "Proszę wprowadzić email i hasło";
+"demo_credentials" = "Demo: %@ / %@";
+
+// MARK: - Welcome
+"welcome_user" = "Witaj, %@!";
+"successfully_logged_in" = "Pomyślnie zalogowano do konta.";
+"account" = "Konto";
+"login_time" = "Czas logowania";
+"add_activity" = "Dodaj aktywność";
+"view_map" = "Zobacz mapę";
+"thank_you_using_app" = "Dziękujemy za korzystanie z naszej aplikacji!";
+"logout" = "Wyloguj";
+
+// MARK: - Add Activity
+"add_new_activity" = "Dodaj nową aktywność";
+"choose_activity_add_details" = "Wybierz aktywność i dodaj szczegóły";
+"activity_name_optional" = "Nazwa aktywności (opcjonalne)";
+"description_optional" = "Opis (opcjonalne)";
+"search_activities" = "Szukaj aktywności...";
+"add_activity_button" = "Dodaj aktywność";
+"activity_added" = "Aktywność dodana";
+"added_activity" = "Dodano: %@";
+
+// MARK: - Activities
+"running" = "Bieganie";
+"cycling" = "Jazda na rowerze";
+"hiking" = "Wędrówki";
+"swimming" = "Pływanie";
+"gym" = "Siłownia";
+"yoga" = "Joga";
+"tennis" = "Tenis";
+"basketball" = "Koszykówka";
+"football" = "Piłka nożna";
+"volleyball" = "Siatkówka";
+"boxing" = "Boks";
+"dancing" = "Taniec";
+
+// MARK: - Map
+"map" = "Mapa";
+"view_map" = "Zobacz mapę";
+
+// MARK: - Location
+"location_permission_title" = "Wymagany dostęp do lokalizacji";
+"location_permission_message" = "Ta aplikacja potrzebuje dostępu do Twojej lokalizacji, aby zapewnić funkcje oparte na lokalizacji i śledzić Twoje aktywności.";
+"allow_location_access" = "Zezwól na dostęp do lokalizacji";
+"open_settings" = "Otwórz ustawienia";
+"location_settings_alert_title" = "Dostęp do lokalizacji odrzucony";
+"location_settings_alert_message" = "Proszę włączyć dostęp do lokalizacji w Ustawieniach, aby korzystać z funkcji lokalizacji.";
+"location_unknown" = "Lokalizacja nieznana";
+"current_location" = "Aktualna lokalizacja";
+"location_enabled" = "Lokalizacja włączona";
+"location_disabled" = "Lokalizacja wyłączona";

@@ -12,13 +12,15 @@ struct WelcomeView: View {
     @State private var userName: String = ""
     @State private var userEmail: String = ""
     @State private var userAvatar: String = ""
+    @StateObject private var locationManager = LocationManager.shared
+    @State private var showLocationPermission = false
     
     var body: some View {
         VStack(spacing: 30) {
             // Header with logout button
             HStack {
                 Spacer()
-                Button("Logout") {
+                Button("logout".localized) {
                     Task { @MainActor in
                         AuthService.shared.logout()
                         isLoggedIn = false
@@ -43,11 +45,11 @@ struct WelcomeView: View {
                         .foregroundColor(.green)
                 }
                 
-                Text("Welcome, \(userName)!")
+                Text("welcome_user".localized(with: userName))
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                Text("You have successfully logged in to your account.")
+                Text("successfully_logged_in".localized)
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .foregroundColor(.secondary)
@@ -71,8 +73,25 @@ struct WelcomeView: View {
                     HStack {
                         Image(systemName: "clock.fill")
                             .foregroundColor(.orange)
-                        Text("Login Time: \(getCurrentTime())")
+                        Text("login_time".localized + ": \(getCurrentTime())")
                             .font(.headline)
+                    }
+                    
+                    HStack {
+                        Image(systemName: locationManager.isLocationEnabled ? "location.fill" : "location.slash")
+                            .foregroundColor(locationManager.isLocationEnabled ? .green : .red)
+                        Text(locationManager.isLocationEnabled ? "location_enabled".localized : "location_disabled".localized)
+                            .font(.headline)
+                    }
+                    
+                    if let location = locationManager.location {
+                        HStack {
+                            Image(systemName: "mappin.circle.fill")
+                                .foregroundColor(.blue)
+                            Text("current_location".localized + ": \(locationManager.getLocationString())")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
                 .padding()
@@ -80,19 +99,60 @@ struct WelcomeView: View {
                 .cornerRadius(10)
                 .padding(.horizontal, 40)
                 
-                // Map Button
-                NavigationLink(destination: MapView()) {
-                    HStack {
-                        Image(systemName: "map.fill")
-                            .foregroundColor(.white)
-                        Text("View Map")
-                            .font(.headline)
-                            .foregroundColor(.white)
+                // Action Buttons
+                VStack(spacing: 15) {
+                    // Location Permission Button
+                    if locationManager.authorizationStatus == .notDetermined || locationManager.authorizationStatus == .denied {
+                        Button(action: {
+                            if locationManager.authorizationStatus == .denied {
+                                showLocationPermission = true
+                            } else {
+                                locationManager.requestLocationPermission()
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "location.circle.fill")
+                                    .foregroundColor(.white)
+                                Text("allow_location_access".localized)
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.orange)
+                            .cornerRadius(10)
+                        }
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .cornerRadius(10)
+                    
+                    // Add Activity Button
+                    NavigationLink(destination: AddItemView()) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.white)
+                            Text("add_activity".localized)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                    }
+                    
+                    // Map Button
+                    NavigationLink(destination: MapView()) {
+                        HStack {
+                            Image(systemName: "map.fill")
+                                .foregroundColor(.white)
+                            Text("view_map".localized)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(10)
+                    }
                 }
                 .padding(.horizontal, 40)
             }
@@ -100,7 +160,7 @@ struct WelcomeView: View {
             Spacer()
             
             // Footer
-            Text("Thank you for using our app!")
+            Text("thank_you_using_app".localized)
                 .font(.caption)
                 .foregroundColor(.gray)
                 .padding(.bottom, 20)
@@ -109,6 +169,16 @@ struct WelcomeView: View {
         .navigationBarHidden(true)
         .task {
             await loadUserData()
+        }
+        .alert("location_settings_alert_title".localized, isPresented: $showLocationPermission) {
+            Button("cancel".localized) { }
+            Button("open_settings".localized) {
+                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsUrl)
+                }
+            }
+        } message: {
+            Text("location_settings_alert_message".localized)
         }
     }
     
