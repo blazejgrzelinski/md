@@ -2,7 +2,7 @@
 //  AuthService.swift
 //  mg
 //
-//  Created by Blazej Grzelinski on 09/10/2025.
+//  Created by Blazej Grzelinski on 10/10/2025.
 //
 
 import Foundation
@@ -87,6 +87,65 @@ class AuthService {
         return loginResponse
     }
     
+    // MARK: - Registration
+    func register(email: String, password: String, name: String) async throws -> LoginResponse {
+        guard let url = URL(string: "\(baseURL)/register") else {
+            throw URLError(.badURL)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let registrationRequest = [
+            "name": name,
+            "email": email,
+            "password": password
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: registrationRequest)
+        
+        print("🔐 Sending registration request to: \(url)")
+        print("📧 Email: \(email)")
+        print("👤 Name: \(name)")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        print("📡 Response Status Code: \(httpResponse.statusCode)")
+        
+        // Print raw response data
+        if let rawResponse = String(data: data, encoding: .utf8) {
+            print("📦 Raw Response Data:")
+            print(rawResponse)
+        }
+        
+        guard httpResponse.statusCode == 200 || httpResponse.statusCode == 201 else {
+            if let errorMessage = String(data: data, encoding: .utf8) {
+                print("❌ Error Response: \(errorMessage)")
+                throw NSError(domain: "AuthError", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+            }
+            throw URLError(.badServerResponse)
+        }
+        
+        // Try to decode with better error handling
+        let loginResponse: LoginResponse
+        do {
+            let decoder = JSONDecoder()
+            loginResponse = try decoder.decode(LoginResponse.self, from: data)
+        } catch {
+            throw error
+        }
+        
+        // Store tokens and user data
+        await saveUserSession(loginResponse)
+        
+        return loginResponse
+    }
+    
     // MARK: - Logout
     @MainActor
     func logout() {
@@ -125,4 +184,3 @@ class AuthService {
         )
     }
 }
-
